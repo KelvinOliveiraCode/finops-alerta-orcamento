@@ -1,0 +1,17 @@
+[project]
+name = "finops-alerta-orcamento"
+version = "0.1.0"
+description = "Alerta de orçamento de nuvem: fatura local (CSV/JSON) vs orçamento, sem credenciais reais."
+requires-python = ">=3.10"
+readme = "README.md"
+dependencies = []
+
+[project.scripts]
+finops-alerta = "finops_alerta_orcamento.cli:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
