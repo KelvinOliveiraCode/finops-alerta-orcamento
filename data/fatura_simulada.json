@@ -1,0 +1,9 @@
+{
+  "conta": "123456789012",
+  "periodo": "2026-09",
+  "itens": [
+    {"servico": "EC2", "valor": 120.50},
+    {"servico": "S3", "valor": 45.30},
+    {"servico": "RDS", "valor": 60.00}
+  ]
+}

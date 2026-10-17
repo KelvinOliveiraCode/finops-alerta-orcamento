@@ -1,0 +1,6 @@
+{
+  "conta": "123456789012",
+  "periodo": "2026-09",
+  "limite_total": 200.00,
+  "limite_percentual_alerta": 80
+}
