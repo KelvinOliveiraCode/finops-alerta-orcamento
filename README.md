@@ -1,157 +1,84 @@
 # finops-alerta-orcamento
 
-Alerta de orçamento de nuvem (MVP). Lê uma fatura simulada local (CSV ou JSON), compara com um orçamento e imprime um alerta quando o gasto excede o limite percentual. Sem credenciais reais de nuvem: tudo roda sobre arquivos locais.
+![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)   ![status: concluido](https://img.shields.io/badge/status-concluido-green)   ![licenca: MIT](https://img.shields.io/badge/licenca-MIT-blue)
 
--- PT-BR --
+## Resumo
+
+Projeto em Python desenvolvido como estudo de engenharia de software. Projeto funcional, finops-alerta-orcamento
+
+## Problema / por que existe
+
+O projeto aborda um recorte pratico e automatiza uma tarefa que, feita manualmente, e repetitiva e propensa a erro. O foco esta em transformar dados ou processos em saida confiavel, com codigo legivel e testavel.
+
+## Arquitetura
+
+O codigo esta organizado por responsabilidade:
+
+- Entrada: leitura de arquivo, API, entrada do usuario ou captura de dados (dependendo do modulo).
+- Processamento: funcoes puras ou classes que aplicam regras de negocio, transformacao ou analise sobre os dados de entrada.
+- Saida: gravacao de arquivo, impressao em terminal, resposta HTTP ou geracao de relatorio.
+
+Quando aplicavel, a aplicacao separa a camada de acesso a dados da camada de logica de negocio, para que mudar a origem dos dados nao exija reescrever as regras.
+
+## Tecnologias
+
+- Python 3.x
+- (nenhum informado no repositorio)
+
+- Sem CI configurado neste repositorio.
+
+O repositorio contem testes automatizados.
 
 ## O que faz
 
-Lê uma fatura simulada (CSV/JSON) da pasta `data/`, soma o total dos itens, compara com o orçamento de `data/orcamento.json` e imprime uma mensagem no console quando o uso atinge ou excede o percentual de alerta (padrão: 80%).
+Projeto funcional, finops-alerta-orcamento
 
-## Como usar
+## Como rodar
 
-Requisitos: Python 3.10+.
-
-```bash
-cd finops-alerta-orcamento
-set PYTHONPATH=src
-python -m finops_alerta_orcamento.cli data\fatura_simulada.csv data\orcamento.json
-```
-
-Saída esperada (a fatura de exemplo totaliza R$ 225,80 contra orçamento de R$ 200,00 = 112,9%):
+Requisitos: Python 3.x instalado.
 
 ```
-ALERTA: fatura 123456789012/2026-09 total R$ 225.80 excede 80% do orçamento R$ 200.00 (uso 112.9%)
+# instalar dependencias (se houver requirements.txt)
+pip install -r requirements.txt
+
+# executar
+python main.py
+
+# executar testes
+pytest
 ```
 
-O programa retorna código de saída 1 quando o alerta dispara e 0 quando não dispara.
+## Estrutura do projeto
 
-## Formato dos arquivos
+- src/ (4 arquivo(s))
+- data/ (3 arquivo(s))
+- tests/ (1 arquivo(s))
+- .gitignore, BRIEF.md, pyproject.toml, README.en.md, README.md
 
-Fatura CSV (colunas: conta, periodo, servico, valor):
 
-```
-conta,periodo,servico,valor
-123456789012,2026-09,EC2,120.50
-123456789012,2026-09,S3,45.30
-123456789012,2026-09,RDS,60.00
-```
+## Trade-offs e decisões
 
-Fatura JSON:
+- Biblioteca padrao sempre que possivel, dependencias externas so quando o ganho justifica a manutencao.
+- Scripts executaveis direto, sem build step complexo, para facilitar a reproducao.
+- Logica separada de entrada/saida para manter as funcoes de processamento testaveis.
 
-```json
-{
-  "conta": "123456789012",
-  "periodo": "2026-09",
-  "itens": [
-    {"servico": "EC2", "valor": 120.50},
-    {"servico": "S3", "valor": 45.30},
-    {"servico": "RDS", "valor": 60.00}
-  ]
-}
-```
+## Limitações conhecidas
 
-Orçamento JSON:
+- Escopo limitado ao recorte descrito; nao e uma plataforma completa.
+- Depende de Python 3.x no ambiente de execucao.
 
-```json
-{
-  "conta": "123456789012",
-  "periodo": "2026-09",
-  "limite_total": 200.00,
-  "limite_percentual_alerta": 80
-}
-```
 
 ## Testes
 
-```bash
-set PYTHONPATH=src
-python -m pytest -q
 ```
-
-Resultado: 14 testes passam.
+pytest
+```
 
 ## Licença
 
-MIT.
+Distribuído sob a licenca MIT. Consulte o arquivo `LICENSE` do repositorio.
 
 ## Autor
 
-Kelvin Oliveira
-
--- EN --
-
-## What it does
-
-Reads a simulated bill (CSV/JSON) from `data/`, sums the item totals, compares against the budget in `data/orcamento.json`, and prints a message to the console when usage reaches or exceeds the alert percentage (default: 80%). No real cloud credentials: everything runs on local files.
-
-## How to use
-
-Requirements: Python 3.10+.
-
-```bash
-cd finops-alerta-orcamento
-export PYTHONPATH=src
-python -m finops_alerta_orcamento.cli data/fatura_simulada.csv data/orcamento.json
-```
-
-Expected output (the sample bill totals R$ 225.80 vs budget R$ 200.00 = 112.9%):
-
-```
-ALERTA: fatura 123456789012/2026-09 total R$ 225.80 excede 80% do orçamento R$ 200.00 (uso 112.9%)
-```
-
-The program returns exit code 1 when the alert fires and 0 when it does not.
-
-## File formats
-
-Simulated bill CSV (columns: account, period, service, value):
-
-```
-conta,periodo,servico,valor
-123456789012,2026-09,EC2,120.50
-123456789012,2026-09,S3,45.30
-123456789012,2026-09,RDS,60.00
-```
-
-Simulated bill JSON:
-
-```json
-{
-  "conta": "123456789012",
-  "periodo": "2026-09",
-  "itens": [
-    {"servico": "EC2", "valor": 120.50},
-    {"servico": "S3", "valor": 45.30},
-    {"servico": "RDS", "valor": 60.00}
-  ]
-}
-```
-
-Budget JSON:
-
-```json
-{
-  "conta": "123456789012",
-  "periodo": "2026-09",
-  "limite_total": 200.00,
-  "limite_percentual_alerta": 80
-}
-```
-
-## Tests
-
-```bash
-export PYTHONPATH=src
-python -m pytest -q
-```
-
-Result: 14 tests pass.
-
-## License
-
-MIT.
-
-## Author
-
-Kelvin Oliveira
+Kelvin Oliveira, https://github.com/KelvinOliveiraCode
+Portfolio: https://kelvinoliveiracode.github.io/portfolio/
