@@ -1,118 +1,93 @@
 # finops-alerta-orcamento
 
-<div align="center">
-
 [English](README.en.md) · **Português (Brasil)**
 
-</div>
-
-[![Python 3](https://img.shields.io/badge/Python-3.x-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/) [![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat-square&logo=scikit-learn)](https://scikit-learn.org/) [![pandas](https://img.shields.io/badge/pandas-150458?style=flat-square&logo=pandas)](https://pandas.pydata.org/) [![pytest](https://img.shields.io/badge/pytest-0A9EDC?style=flat-square&logo=pytest)](https://docs.pytest.org/) [![MIT License](https://img.shields.io/badge/License-MIT-f4c430?style=flat-square)](LICENSE)
-
-### Projeto funcional ,  finops-alerta-orcamento
-
----
+[![Python 3](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](#) [![pytest](https://img.shields.io/badge/pytest-14%20testes-0A9EDC?style=flat-square&logo=pytest)](#) [![MIT License](https://img.shields.io/badge/License-MIT-f4c430?style=flat-square)](LICENSE)
 
 ## O que é
 
-Projeto funcional ,  finops-alerta-orcamento
+**Alerta de orçamento de nuvem (FinOps)**: lê uma **fatura simulada** (CSV ou JSON) e um **orçamento** (JSON), compara o total da fatura contra o limite e **dispara um alerta** com o percentual de uso. É um laboratório educacional de FinOps em Python puro (stdlib).
 
----
+## Status
 
-## Início Rápido
+Laboratório educacional funcional e testado (14 testes).
 
-```bash
-# Clone e entre
-git clone https://github.com/KelvinOliveiraCode/<repo>.git
-cd <repo>
+## Funcionalidades
 
-# Instale dependências
-# Nenhum requirements.txt detectado
+- **Leitura de fatura** (`alerta.py`): `ler_fatura_csv`/`ler_fatura_json` — aceita CSV (lista de itens) ou JSON.
+- **Orçamento** (`carregar_orcamento`): lê o JSON de orçamento com o limite.
+- **Avaliação** (`avaliar`): compara `Fatura.total` com o limite do `Orcamento` e calcula `percentual_uso`.
+- **Disparo** (`disparar_alerta`): imprime o alerta quando o uso passa do limite.
+- **CLI**: `finops-alerta <fatura> <orcamento>`.
 
-# Execute o projeto
-python main.py
+## Arquitetura
 
-# Execute os testes
-pytest
+Pacote `finops_alerta_orcamento` com `models.py` (Fatura/Orcamento/Alerta), `alerta.py` (leitura, avaliação, disparo) e `cli.py` (interface).
+
+```mermaid
+flowchart LR
+    FAT[fatura .csv/.json] --> LER[ler_fatura]
+    ORC[orcamento .json] --> CAR[carregar_orcamento]
+    LER --> AVA[avaliar - total vs limite + % uso]
+    CAR --> AVA
+    AVA --> DIS[disparar_alerta]
+    CLI[finops-alerta] --> LER
 ```
 
-## Como funciona
+## Stack
 
-Estrutura limpa e modular com separação de responsabilidades.
+- Python ≥ 3.10, stdlib apenas
+- pytest (dev)
 
----
+## Estrutura do repositório
 
-## Capacidades
+```
+finops-alerta-orcamento/
+├── pyproject.toml · BRIEF.md
+├── src/finops_alerta_orcamento/
+│   ├── models.py    # Fatura/Orcamento/Alerta
+│   ├── alerta.py    # leitura + avaliação + disparo
+│   └── cli.py       # CLI
+├── tests/           # 14 testes
+└── LICENSE          # MIT
+```
 
-| Capacidade | Descrição |
-|------------|-------------|
-| Carregamento de Dados | Auto-download do TensorFlow creditcard.csv (284k transações) com cache local |
-| EDA e Visualização | Distribuição de classes, histogramas de Amount, heatmaps de correlação (matplotlib/seaborn) |
-| Pré-processamento | RobustScaler em Amount/Time, split estratificado, remoção de duplicatas |
-| Balanceamento | SMOTE oversampling (fallback: class_weight="balanced") |
-| Modelagem | LogisticRegression, RandomForest, ExtraTrees com RandomizedSearchCV (StratifiedKFold) |
-| Métricas | Accuracy, Precision, Recall, F1, ROC AUC, Specificity, Confusion Matrix |
-| Seleção | Score ponderado: Recall 40% + F1 30% + Precision 20% + Accuracy 10% |
-| Persistência | Serialização joblib para modelo, scaler e resultados completos |
+## Pré-requisitos e instalação
 
+```bash
+pip install -e .
+```
 
----
+## Como executar
 
+```bash
+finops-alerta fatura.csv orcamento.json
+finops-alerta fatura.json orcamento.json
+```
 
+## Testes e qualidade
 
----
+Comando real (verificado pelo agente):
 
-## Perguntas Frequentes
+```bash
+PYTHONPATH=src python -m pytest tests/
+# 14 passed
+```
 
-<details>
-<summary><strong>O que é este projeto?</strong></summary>
+## Decisões técnicas e trade-offs
 
-Um estudo/projeto em Python demonstrando conceitos fundamentais.
+- **Fatura simulada local**: seguro e reprodutível, sem chaves de provedor de nuvem; em troca, não consulta APIs reais (AWS/GCP/Azure).
+- **Percentual de uso no alerta**: dá contexto (quanto do limite foi consumido), não apenas sim/não.
 
-</details>
+## Limitações conhecidas e roadmap
 
-<details>
-<summary><strong>Como executar?</strong></summary>
+- Não integra provedores de nuvem reais (fatura é arquivo local).
+- Alerta impresso no stdout; sem envio por e-mail/webhook.
 
-Veja [Início Rápido](#início-rápido) para comandos copiáveis.
+## Processo de desenvolvimento
 
-</details>
+Projeto individual de Kelvin Oliveira, construído com agentes de IA orquestrados e revisado pelo autor.
 
-<details>
-<summary><strong>Há testes?</strong></summary>
+## Licença e autor
 
-Nenhum teste automatizado neste repositório.
-
-</details>
-
-<details>
-<summary><strong>Posso usar em produção?</strong></summary>
-
-Este é um **projeto de estudo/portfólio**. Revise e endureça (auth, persistência, monitoramento, etc.) antes de usar em produção.
-
-</details>
-
-
-
----
-
-## Documentação
-
-- **Código-Fonte** ,  Navegue pelo diretório `src/` para detalhes de implementação
-- **Referência da API** ,  Docstrings inline + type hints
-- **Diagrama de Arquitetura** ,  Veja [architecture.mermaid](docs/architecture.mermaid) (se presente)
-- **Changelog** ,  [CHANGELOG.md](CHANGELOG.md) (se presente)
-- **Contribuindo** ,  [CONTRIBUTING.md](CONTRIBUTING.md) (se presente)
-
-## Licença
-
-[MIT](LICENSE) ,  Kelvin Oliveira
-
----
-
-<div align="center">
-
-**Construído com** · Python 3 + scikit-learn + pandas
-
-**Autor** · [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
-
-</div>
+MIT — Copyright (c) 2026 Kelvin Rebelo de Oliveira. Autor: [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfólio](https://kelvinoliveiracode.github.io/portfolio/)
